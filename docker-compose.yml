@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - "5440:5432"
+    environment:
+      - POSTGRES_DB=book_system
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:3000
+    volumes:
+      - .:/code
+    ports:
+      - "3000:3000"
+    environment:
+      - POSTGRES_NAME=book_system
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
