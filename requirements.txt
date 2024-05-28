@@ -4,4 +4,5 @@ djangorestframework
 pygments
 django_extensions
 ipython
-django_filter
+pillow
+django-filter
