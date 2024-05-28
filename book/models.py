@@ -25,10 +25,10 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=30, blank=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name= 'books')
     genre = models.CharField(max_length=12)
     publication_date = models.DateField(auto_now_add=True)
-    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, related_name= 'books')
     rating = models.FloatField(blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
 

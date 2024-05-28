@@ -32,7 +32,7 @@ def send_view(request):
     return HttpResponse('hello')
 
 
-class AuthorView(viewsets.ModelViewSet):
+class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     filterset_class = AuthorFilter
@@ -49,7 +49,7 @@ class AuthorView(viewsets.ModelViewSet):
     search_fields = ['name', ]
 
 
-class BookView(viewsets.ModelViewSet):
+class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
