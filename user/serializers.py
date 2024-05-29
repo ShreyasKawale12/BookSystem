@@ -11,7 +11,9 @@ class UserSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        instance.password = make_password(validated_data.get('password', instance.password))
+        if 'password' in validated_data:
+            password = make_password(validated_data.pop('password'))
+            instance.password = password
         return super().update(instance, validated_data)
 
     class Meta:
