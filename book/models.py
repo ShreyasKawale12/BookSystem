@@ -13,7 +13,6 @@ class Publisher(models.Model):
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete= models.CASCADE, related_name= 'author_profile', null= True)
     name = models.CharField(max_length=20, blank=True)
-    age = models.IntegerField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     date_of_death = models.DateField(blank=True, null=True)
     nationality = models.CharField(max_length=20, blank=True)
@@ -41,9 +40,3 @@ class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
 
-class Store(models.Model):
-    name = models.CharField(max_length= 25, blank=True)
-    books = models.ManyToManyField(Book, related_name= 'stores')
-
-    def __str__(self):
-        return self.name

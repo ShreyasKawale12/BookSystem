@@ -37,13 +37,6 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorSerializer
     filterset_class = AuthorFilter
 
-    def perform_create(self, serializer):
-        data = self.request.data.copy()
-        dob = datetime.strptime(data['date_of_birth'], '%Y-%m-%d')
-        age = (datetime.now() - dob).days // 365
-        serializer.validated_data['age'] = age
-        serializer.save()
-
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['age']
     search_fields = ['name', ]
