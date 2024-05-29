@@ -2,11 +2,19 @@ from rest_framework import serializers
 from .models import Book, Author, Publisher, Review
 
 
+class AuthorNestedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ['id', 'name']
+
+
 class BookSerializer(serializers.ModelSerializer):
+    author_details = AuthorNestedSerializer(source='author', read_only=True)
 
     class Meta:
         model = Book
-        fields = ['title', 'author', 'genre', 'publication_date', 'publisher', 'rating', 'price']
+        fields = ['title', 'author', 'author_details', 'genre', 'publication_date', 'publisher',
+                  'rating', 'price']
 
 
 class PublisherSerializer(serializers.ModelSerializer):
