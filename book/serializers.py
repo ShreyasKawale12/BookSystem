@@ -1,6 +1,12 @@
 from rest_framework import serializers
-from .models import Book, Author, Publisher, Review
+from .models import Book, Author, Publisher, Review, Distribution
 from datetime import date
+
+
+class DistributionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Distribution
+        fields = ['store', 'user', 'quantity']
 
 
 class AuthorNestedSerializer(serializers.ModelSerializer):
@@ -11,10 +17,11 @@ class AuthorNestedSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     author_details = AuthorNestedSerializer(source='author', read_only=True)
+    book_distribution = DistributionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Book
-        fields = ['title', 'author', 'author_details', 'genre', 'publication_date', 'publisher',
+        fields = ['title', 'author', 'author_details','book_distribution', 'genre', 'publication_date', 'publisher',
                   'rating', 'price']
 
 

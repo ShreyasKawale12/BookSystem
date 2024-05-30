@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Inventory, Store
+from .models import Inventory, Store, Quantity
 
 
 class InventorySerializer(serializers.ModelSerializer):
@@ -10,9 +10,16 @@ class InventorySerializer(serializers.ModelSerializer):
         fields = ['book', 'book_title', 'quantity']
 
 
+class QuantitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quantity
+        fields = ['store', 'user', 'book', 'quantity']
+
+
 class StoreSerializer(serializers.ModelSerializer):
     inventory = InventorySerializer(source='store_inventory', many=True, read_only=True)
+    quantity_distribution = QuantitySerializer(source='store_quantity', many=True, read_only=True)
 
     class Meta:
         model = Store
-        fields = ['id', 'name', 'inventory']
+        fields = ['id', 'name', 'inventory', 'quantity_distribution', 'customers']
