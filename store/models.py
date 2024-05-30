@@ -16,3 +16,8 @@ class Inventory(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name="store_inventory")
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['store', 'book'], name= 'unique_book_per_store')
+        ]

@@ -10,7 +10,6 @@ class InventorySerializer(serializers.ModelSerializer):
         fields = ['book', 'book_title', 'quantity']
 
 
-
 class StoreSerializer(serializers.ModelSerializer):
     inventory = InventorySerializer(source='store_inventory', many=True, read_only=True)
 
