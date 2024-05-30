@@ -30,7 +30,6 @@ class Book(models.Model):
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, related_name='books')
     rating = models.FloatField(blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
-    users = models.ManyToManyField(User, through='Distribution', related_name='books')
 
     def __str__(self):
         return self.title
@@ -41,8 +40,4 @@ class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
 
-class Distribution(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_distribution')
-    store = models.ForeignKey('store.Store', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name= 'user_book_distribution')
-    quantity = models.PositiveIntegerField(default=0)
+

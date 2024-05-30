@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'book',
-    'store',
+    'store.apps.StoreConfig',
     'user',
 ]
 
