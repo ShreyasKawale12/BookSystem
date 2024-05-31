@@ -28,3 +28,5 @@ class InventoryAdmin(admin.ModelAdmin):
 @admin.register(Quantity)
 class QuantityAdmin(admin.ModelAdmin):
     fields = ['store', 'user', 'book', 'quantity']
+
+

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'book',
     'store.apps.StoreConfig',
+    'cart.apps.CartConfig',
     'user',
 ]
 

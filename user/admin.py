@@ -7,8 +7,11 @@ admin.site.unregister(User)
 
 # Register your models here.
 
+
 class UserAdmin(DefaultUserAdmin):
     list_display = ['first_name', 'last_name']
+    fields = ['username', 'password', 'first_name', 'last_name']
+    fieldsets = []
 
 
 admin.site.register(User, UserAdmin)
