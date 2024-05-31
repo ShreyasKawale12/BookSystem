@@ -10,7 +10,7 @@ class BookQuantityInline(admin.TabularInline):
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ('user',)
-    fields = ('user', 'store')
+    fields = ('user',)
     inlines = [
         BookQuantityInline,
     ]

@@ -21,7 +21,7 @@ urlpatterns = [
     path('api/', include('book.urls')),
     path('store/', include('store.urls')),
     path('user/', include('user.urls')),
-    # path('cart/', include('cart.urls')),
+    path('cart/', include('cart.urls')),
     path('api-auth/', include('rest_framework.urls')),
 
 ]
