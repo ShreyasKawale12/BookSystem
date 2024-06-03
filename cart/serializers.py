@@ -15,4 +15,12 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['user', 'username','book_quantity',]
+        fields = ['user', 'username', 'book_quantity', ]
+
+
+class CartSerializerForOrders(serializers.ModelSerializer):
+    book_list = BookQuantitySerializer(source='book_quantity', many=True, read_only=True)
+
+    class Meta:
+        model = Cart
+        fields = ['book_list']
