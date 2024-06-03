@@ -4,9 +4,18 @@ from .models import Cart, BookQuantity
 
 
 class BookQuantitySerializer(serializers.ModelSerializer):
+    book_title = serializers.SerializerMethodField()
+    store_name = serializers.SerializerMethodField()
+
+    def get_book_title(self, obj):
+        return obj.book.title
+
+    def get_store_name(self, obj):
+        return obj.store.name
+
     class Meta:
         model = BookQuantity
-        fields = ['store', 'book', 'quantity']
+        fields = ['store_name', 'book_title', 'quantity']
 
 
 class CartSerializer(serializers.ModelSerializer):
