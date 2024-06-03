@@ -9,7 +9,7 @@ from store.models import Inventory
 
 
 @receiver(pre_save, sender=Order)
-def order_post_save(sender, instance, **kwargs):
+def order_pre_save(sender, instance, **kwargs):
     with transaction.atomic():
         user = instance.user
         user_cart = user.user_cart
@@ -21,7 +21,7 @@ def order_post_save(sender, instance, **kwargs):
             quantity = bq.quantity
             try:
                 inventory = Inventory.objects.select_for_update().get(store=store, book=book)
-                if quantity < inventory.quantity:
+                if quantity <= inventory.quantity:
                     # raise ValidationError(f"{book} is out of stock -> Available stock = {inventory.quantity}")
                     inventory.quantity -= quantity
                     inventory.save()
