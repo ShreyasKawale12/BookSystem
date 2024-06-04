@@ -1,5 +1,4 @@
 from django.http import Http404
-from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from .models import Order
 from .serializers import OrderSerializer
