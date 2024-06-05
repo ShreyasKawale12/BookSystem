@@ -26,8 +26,6 @@ def order_pre_save(sender, instance, **kwargs):
                     inventory.quantity -= quantity
                     inventory.save()
                 else:
-                    instance.status = 'FAILED'
-                    instance.order_message = f"Book {book} is out of stock -> Available stock = {inventory.quantity}"
+                    raise ValidationError(f"{book} is out of stock -> Available stock = {inventory.quantity}")
             except Inventory.DoesNotExist:
-                instance.status = 'FAILED'
-                instance.order_message = f"Inventory for {book} does not exist"
+                raise ValidationError(f"Inventory for {book} does not exist")

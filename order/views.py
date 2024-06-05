@@ -1,14 +1,14 @@
-from django.http import Http404
 from rest_framework import viewsets, permissions
-from .models import Order
+from .models import Order, OrderItem
 from .serializers import OrderSerializer
+from cart.models import Cart, BookQuantity
+from django.http import Http404
 
-
-# Create your views here.
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -17,18 +17,33 @@ class OrderViewSet(viewsets.ModelViewSet):
         return super().get_queryset()
 
     def perform_create(self, serializer):
-        user = serializer.validated_data.get('user')
+        confirmation = self.request.data.get('confirm_order', False)
+        if not confirmation:
+            return
+        user = self.request.user
         try:
             cart = user.user_cart
             book_quantities = cart.book_quantity.all()
-        except Exception:
+        except Cart.DoesNotExist:
             raise Http404("User does not have a cart")
+
         total_price = 0
+        order = serializer.save(user=user)
+
         for book_quantity in book_quantities:
-            book_price = book_quantity.book.price
+            book = book_quantity.book
+            store = book_quantity.store
             quantity = book_quantity.quantity
-            total_price += book_price * quantity
+            price = book.price
 
-        serializer.save(total_amount=total_price)
+            total_price += price * quantity
 
-    permission_classes = [permissions.IsAuthenticated]
+            OrderItem.objects.create(
+                order=order,
+                book=book,
+                store=store,
+                quantity=quantity,
+                price=price
+            )
+
+        order.save(total_amount=total_price)
