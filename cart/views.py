@@ -26,6 +26,8 @@ class CartViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = BookQuantity.objects.all()
