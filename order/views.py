@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
+from cart.serializers import BookQuantitySerializer
 from cart.models import Cart, BookQuantity
 from django.http import Http404
 
@@ -12,9 +13,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if not user.is_superuser:
-            return Order.objects.filter(user=user)
-        return super().get_queryset()
+        return Order.objects.filter(user=user)
 
     def perform_create(self, serializer):
         confirmation = self.request.data.get('confirm_order', False)
@@ -46,4 +45,5 @@ class OrderViewSet(viewsets.ModelViewSet):
                 price=price
             )
 
-        order.save(total_amount=total_price)
+        order.total_amount = total_price
+        order.save()

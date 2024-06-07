@@ -16,3 +16,5 @@ class BookQuantity(models.Model):
     store = models.ForeignKey('store.Store', on_delete=models.CASCADE, related_name='+', default=1)
     book = models.ForeignKey('book.Book', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
+
+

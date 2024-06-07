@@ -51,6 +51,8 @@ class CartSerializer(serializers.ModelSerializer):
                     'store': store_instance,
                     'quantity': quantity}
             )
+            if quantity == 0:
+                book_quantity_instance.delete()
 
         return instance
 

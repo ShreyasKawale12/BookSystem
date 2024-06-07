@@ -8,24 +8,25 @@ from .models import Order
 from store.models import Inventory
 
 
-@receiver(pre_save, sender=Order)
-def order_pre_save(sender, instance, **kwargs):
-    with transaction.atomic():
-        user = instance.user
-        user_cart = user.user_cart
-        book_quantities = user_cart.book_quantity.all()
+@receiver(post_save, sender=Order)
+def order_post_save(sender, instance, created, **kwargs):
+    if created:
+        print("order_post_save signal called for new order")
+        with transaction.atomic():
+            user = instance.user
+            user_cart = user.user_cart
+            book_quantities = user_cart.book_quantity.all()
 
-        for bq in book_quantities:
-            store = bq.store
-            book = bq.book
-            quantity = bq.quantity
-            try:
+            for book_quantity in book_quantities:
+                store = book_quantity.store
+                book = book_quantity.book
+                quantity = book_quantity.quantity
+
                 inventory = Inventory.objects.select_for_update().get(store=store, book=book)
-                if quantity <= inventory.quantity:
-                    # raise ValidationError(f"{book} is out of stock -> Available stock = {inventory.quantity}")
-                    inventory.quantity -= quantity
-                    inventory.save()
-                else:
-                    raise ValidationError(f"{book} is out of stock -> Available stock = {inventory.quantity}")
-            except Inventory.DoesNotExist:
-                raise ValidationError(f"Inventory for {book} does not exist")
+                inventory.quantity -= quantity
+                inventory.save()
+    else:
+        print("order_post_save signal called for order update")
+
+
+

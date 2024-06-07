@@ -9,11 +9,13 @@ from .serializers import CartSerializer, BookQuantitySerializer
 
 
 class CartViewSet(viewsets.ModelViewSet):
-    queryset = Cart.objects.all()
     serializer_class = CartSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
+        if user.is_superuser:
+            return Cart.objects.all()
         return Cart.objects.filter(user=user)
 
     @action(detail=False, methods=['patch'], url_path='update-cart')
@@ -26,7 +28,6 @@ class CartViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class CartItemViewSet(viewsets.ModelViewSet):

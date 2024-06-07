@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Order, OrderItem
 from book.models import Book
 from store.models import Store
+from cart.serializers import BookQuantitySerializer
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -16,7 +17,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     order_items = OrderItemSerializer(many=True, read_only=True)
     user = serializers.ReadOnlyField(source='user.username')
-    confirm_order = serializers.BooleanField(write_only= True)
+    confirm_order = serializers.BooleanField(write_only=True)
 
     def create(self, validated_data):
         validated_data.pop("confirm_order")
