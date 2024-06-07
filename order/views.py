@@ -1,7 +1,10 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from .models import Order, OrderItem
-from .serializers import OrderSerializer
-from cart.serializers import BookQuantitySerializer
+from .return_books import return_books
+from .serializers import OrderSerializer, CancelOrderSerializer
 from cart.models import Cart, BookQuantity
 from django.http import Http404
 
@@ -14,6 +17,13 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter(user=user)
+
+    def get_serializer_class(self):
+        if self.action == 'cancel_order':
+            return CancelOrderSerializer
+
+        return OrderSerializer
+
 
     def perform_create(self, serializer):
         confirmation = self.request.data.get('confirm_order', False)
@@ -47,3 +57,17 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         order.total_amount = total_price
         order.save()
+
+    @action(detail=False, methods=['patch'], url_path='cancel-order')
+    def cancel_order(self, request, *args, **kwargs):
+        data = self.request.data
+        order_id = data.get('order_id')
+        order = Order.objects.get(id=order_id)
+        if order.status == 'Cancelled':
+            return Response('Already Cancelled', status=status.HTTP_400_BAD_REQUEST)
+        order.status = 'Cancelled'
+        order.save()
+        return_books(order_id)
+        return Response('cancelled the order')
+
+

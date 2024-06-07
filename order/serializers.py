@@ -26,5 +26,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['user', 'created_at', 'status', 'total_amount', 'order_items', 'confirm_order']
+        fields = ['id', 'user', 'created_at', 'status', 'total_amount', 'order_items', 'confirm_order']
         read_only_fields = ['created_at', 'status', 'total_amount', 'order_items']
+
+
+class CancelOrderSerializer(serializers.Serializer):
+    order_id = serializers.PrimaryKeyRelatedField(queryset=Order.objects.filter(status='Active'), required=True)
+
+    def validate_order_id(self, value):
+        return value

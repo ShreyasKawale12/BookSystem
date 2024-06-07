@@ -10,6 +10,7 @@ class AuthorNestedSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     author_details = AuthorNestedSerializer(source='author', read_only=True)
+    author = serializers.PrimaryKeyRelatedField(queryset= Author.objects.all())
 
     class Meta:
         model = Book
@@ -50,7 +51,6 @@ class AuthorPostSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     book = BookSerializer(read_only=True)
-
     class Meta:
         model = Review
         fields = ['content', 'book']
