@@ -18,8 +18,7 @@ class QuantitySerializer(serializers.ModelSerializer):
 
 class StoreSerializer(serializers.ModelSerializer):
     inventory = InventorySerializer(source='store_inventory', many=True, read_only=True)
-    quantity_distribution = QuantitySerializer(source='store_quantity', many=True, read_only=True)
 
     class Meta:
         model = Store
-        fields = ['id', 'name', 'inventory', 'quantity_distribution', 'customers']
+        fields = ['id', 'name', 'inventory',]

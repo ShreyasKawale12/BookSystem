@@ -63,6 +63,8 @@ class OrderViewSet(viewsets.ModelViewSet):
         data = self.request.data
         order_id = data.get('order_id')
         order = Order.objects.get(id=order_id)
+        if order.user != self.request.user:
+            return Response('Cannot perform', status=status.HTTP_400_BAD_REQUEST)
         if order.status == 'Cancelled':
             return Response('Already Cancelled', status=status.HTTP_400_BAD_REQUEST)
         order.status = 'Cancelled'

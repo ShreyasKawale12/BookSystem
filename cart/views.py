@@ -29,7 +29,6 @@ class CartViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = BookQuantity.objects.all()
     serializer_class = BookQuantitySerializer
