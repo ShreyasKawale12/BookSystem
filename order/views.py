@@ -1,11 +1,11 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
+from django.db.models import Sum
 from .models import Order, OrderItem
-from .return_books import return_books
+from .return_order_items import return_cancelled_order_items
 from .serializers import OrderSerializer, CancelOrderSerializer
-from cart.models import Cart, BookQuantity
+from cart.models import Cart
 from django.http import Http404
 
 
@@ -40,21 +40,19 @@ class OrderViewSet(viewsets.ModelViewSet):
         total_price = 0
         order = serializer.save(user=user)
 
-        for book_quantity in book_quantities:
-            book = book_quantity.book
-            store = book_quantity.store
-            quantity = book_quantity.quantity
-            price = book.price
+        total_price = book_quantities.annotate(
+            item_total=Sum('quantity' * 'book__price')
+        ).aggregate(order_total=Sum('item_total'))['order_total'] or 0
 
-            total_price += price * quantity
-
-            OrderItem.objects.create(
+        OrderItem.objects.bulk_create([
+            OrderItem(
                 order=order,
-                book=book,
-                store=store,
-                quantity=quantity,
-                price=price
-            )
+                book=book_quantity.book,
+                store=book_quantity.store,
+                quantity=book_quantity.quantity,
+                price=book_quantity.book.price
+            ) for book_quantity in book_quantities
+        ])
 
         order.total_amount = total_price
         order.save()
@@ -70,5 +68,5 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response('Already Cancelled', status=status.HTTP_400_BAD_REQUEST)
         order.status = 'Cancelled'
         order.save()
-        return_books(order_id)
+        return_cancelled_order_items(order_id)
         return Response('cancelled the order')

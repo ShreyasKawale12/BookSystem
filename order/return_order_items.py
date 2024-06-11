@@ -4,7 +4,7 @@ from order.serializers import OrderSerializer
 from store.models import Inventory
 
 
-def return_books(order_id):
+def return_cancelled_order_items(order_id):
     order = Order.objects.get(id=order_id)
     order_serializer = OrderSerializer(order)
     order_items = order_serializer.data.get("order_items", [])
