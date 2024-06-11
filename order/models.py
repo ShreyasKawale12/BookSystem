@@ -31,6 +31,7 @@ class OrderItem(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='order_items')
     quantity = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    out_for_delivery = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.quantity} of {self.book.title} from {self.store.name} in Order #{self.order.id}"

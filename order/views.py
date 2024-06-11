@@ -16,14 +16,15 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Order.objects.filter(user=user)
+        if not user.is_superuser:
+            return Order.objects.filter(user=user)
+        return super().get_queryset()
 
     def get_serializer_class(self):
         if self.action == 'cancel_order':
             return CancelOrderSerializer
 
         return OrderSerializer
-
 
     def perform_create(self, serializer):
         confirmation = self.request.data.get('confirm_order', False)
@@ -71,5 +72,3 @@ class OrderViewSet(viewsets.ModelViewSet):
         order.save()
         return_books(order_id)
         return Response('cancelled the order')
-
-

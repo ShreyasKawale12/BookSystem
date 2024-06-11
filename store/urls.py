@@ -3,7 +3,7 @@ from .views import StoreViewSet
 
 router = DefaultRouter()
 
-router.register(r'stores', StoreViewSet)
+router.register(r'stores', StoreViewSet, basename='store')
 
 urlpatterns = list()
 

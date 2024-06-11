@@ -11,7 +11,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ['book', 'store', 'quantity', 'price']
+        fields = ['id','book', 'store', 'quantity', 'price',]
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -28,6 +28,14 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'user', 'created_at', 'status', 'total_amount', 'order_items', 'confirm_order']
         read_only_fields = ['created_at', 'status', 'total_amount', 'order_items']
+
+
+class OrderSerializerForStore(serializers.ModelSerializer):
+    order_items = OrderItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'status', 'order_items']
 
 
 class CancelOrderSerializer(serializers.Serializer):

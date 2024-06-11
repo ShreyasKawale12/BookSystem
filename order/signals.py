@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.http import Http404
 
-from .models import Order
+from .models import Order, OrderItem
 from store.models import Inventory
 
 
@@ -27,6 +27,24 @@ def order_post_save(sender, instance, created, **kwargs):
                 inventory.save()
     else:
         print("order_post_save signal called for order update")
+
+
+@receiver(post_save, sender=OrderItem)
+def order_item_post_save(sender, instance, created, **kwargs):
+    if not created and instance.out_for_delivery:
+        status = True
+        order = instance.order
+        order_items = order.order_items.all()
+        for item in order_items:
+            status = status and item.out_for_delivery
+            print(status)
+        if status:
+            order.status = 'confirmed'
+            order.save()
+
+
+
+
 
 
 
