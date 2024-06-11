@@ -26,8 +26,8 @@ class StoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Store
-        fields = ['id', 'name', 'inventory', 'order_items','order_item_id']
-        read_only_fields = ['name',]
+        fields = ['id', 'name', 'inventory', 'order_items', 'order_item_id']
+        read_only_fields = ['name', ]
 
     def update(self, instance, validated_data):
         order_item_id = validated_data.pop('order_item_id')
@@ -39,9 +39,6 @@ class StoreSerializer(serializers.ModelSerializer):
 
         return instance
 
-
-
     def get_order_items(self, instance):
-        queryset = OrderItem.objects.filter(store=instance, out_for_delivery=False)
+        queryset = OrderItem.objects.select_related('order').filter(store=instance, out_for_delivery=False).exclude(order__status='Cancelled')
         return OrderItemSerializer(queryset, many=True).data
-

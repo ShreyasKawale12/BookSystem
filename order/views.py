@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import Sum
+from django.db.models import Sum, F
 from .models import Order, OrderItem
 from .return_order_items import return_cancelled_order_items
 from .serializers import OrderSerializer, CancelOrderSerializer
@@ -41,8 +41,8 @@ class OrderViewSet(viewsets.ModelViewSet):
         order = serializer.save(user=user)
 
         total_price = book_quantities.annotate(
-            item_total=Sum('quantity' * 'book__price')
-        ).aggregate(order_total=Sum('item_total'))['order_total'] or 0
+            item_total=Sum(F('quantity') * F('book__price'))
+        ).aggregate(order_total=Sum('item_total'))['order_total']
 
         OrderItem.objects.bulk_create([
             OrderItem(

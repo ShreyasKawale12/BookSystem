@@ -11,6 +11,11 @@ services:
       - POSTGRES_DB=book_system
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: "pg_isready -U postgres -d postgres"
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     build: .
