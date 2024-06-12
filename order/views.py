@@ -7,6 +7,7 @@ from .return_order_items import return_cancelled_order_items
 from .serializers import OrderSerializer, CancelOrderSerializer
 from cart.models import Cart
 from django.http import Http404
+from .email_utils import send_order_placed_email, send_order_cancelled_email
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -56,6 +57,8 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         order.total_amount = total_price
         order.save()
+        order_serializer = OrderSerializer(order)
+        send_order_placed_email(user, order_serializer.data)
 
     @action(detail=False, methods=['patch'], url_path='cancel-order')
     def cancel_order(self, request, *args, **kwargs):
@@ -68,5 +71,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response('Already Cancelled', status=status.HTTP_400_BAD_REQUEST)
         order.status = 'Cancelled'
         order.save()
+        order_serializer = OrderSerializer(order)
+        send_order_cancelled_email(self.request.user, order_serializer.data)
         return_cancelled_order_items(order_id)
         return Response('cancelled the order')

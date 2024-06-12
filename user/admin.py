@@ -9,8 +9,8 @@ admin.site.unregister(User)
 
 
 class UserAdmin(DefaultUserAdmin):
-    list_display = ['first_name', 'last_name']
-    fields = ['username', 'password', 'first_name', 'last_name']
+    list_display = ['username','first_name', 'last_name']
+    fields = ['username', 'password', 'first_name', 'last_name', 'email']
     fieldsets = []
 
 

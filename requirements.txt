@@ -6,4 +6,5 @@ django_extensions
 ipython
 pillow
 django-filter
-
+celery
+redis

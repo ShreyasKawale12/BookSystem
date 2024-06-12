@@ -2,6 +2,7 @@ import django_filters
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from rest_framework import viewsets, permissions
+from .tasks import send_email_task
 from .models import Book, Author, Publisher
 from .serializers import AuthorSerializer, BookSerializer, PublisherSerializer, AuthorPostSerializer
 from datetime import datetime
@@ -70,3 +71,14 @@ class PublisherViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
     permission_classes = [permissions.IsAuthenticated, IsSuperUser]
+
+
+def email_send(request):
+    subject = 'Test email'
+    message = 'This is a test email using celery'
+    from_email = 'shreyaskawale7t@gmail.com'
+    recipient_list = ['kawaleshreyas33@gmail.com', 'john@gmail.com',]
+
+    send_email_task.delay(subject, message, from_email, recipient_list)
+
+    return HttpResponse("sent email using celery")
