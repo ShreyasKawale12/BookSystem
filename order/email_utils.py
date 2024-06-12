@@ -30,3 +30,15 @@ def send_order_cancelled_email(user, order_details):
     recipient_list = [user_email_id, ]
 
     send_email_task.delay(subject, message, from_email, recipient_list)
+
+
+def send_order_out_for_delivery_email(order):
+    subject = 'Order Status'
+    message = f'''
+        Your order labelled {order.id} is Out for delivery
+    '''
+
+    from_email = 'support@BookStore.com'
+    user_email_id = str(order.user.email)
+    recipient_list = [user_email_id, ]
+    send_email_task.delay(subject, message, from_email, recipient_list)

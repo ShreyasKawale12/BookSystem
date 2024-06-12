@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.http import Http404
 
+from .email_utils import send_order_out_for_delivery_email
 from .models import Order, OrderItem
 from store.models import Inventory
 
@@ -41,10 +42,4 @@ def order_item_post_save(sender, instance, created, **kwargs):
         if status:
             order.status = 'confirmed'
             order.save()
-
-
-
-
-
-
-
+            send_order_out_for_delivery_email(order)
