@@ -49,6 +49,9 @@ services:
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - POSTGRES_DB=book_system
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     networks:
       - my_network
 
@@ -63,6 +66,9 @@ services:
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - POSTGRES_DB=book_system
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     networks:
       - my_network
 

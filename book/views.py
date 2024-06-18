@@ -1,11 +1,10 @@
+import time
 import django_filters
-from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from rest_framework import viewsets, permissions
 from .tasks import send_email_task
 from .models import Book, Author, Publisher
 from .serializers import AuthorSerializer, BookSerializer, PublisherSerializer, AuthorPostSerializer
-from datetime import datetime
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from .permissions import IsSuperUser
@@ -73,12 +72,10 @@ class PublisherViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsSuperUser]
 
 
-def email_send(request):
-    subject = 'Test email'
-    message = 'This is a test email using celery'
+def message_send(request):
+    subject = "hello"
+    message = "hello world"
     from_email = 'shreyaskawale7t@gmail.com'
-    recipient_list = ['kawaleshreyas33@gmail.com', 'john@gmail.com',]
-
+    recipient_list = ['kawaleshreyas33@gmail.com', ]
     send_email_task.delay(subject, message, from_email, recipient_list)
-
-    return HttpResponse("sent email using celery")
+    return HttpResponse("sent mail")

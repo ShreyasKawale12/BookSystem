@@ -8,6 +8,7 @@ from .serializers import OrderSerializer, CancelOrderSerializer
 from cart.models import Cart
 from django.http import Http404
 from .email_utils import send_order_placed_email, send_order_cancelled_email
+from django.shortcuts import redirect
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -26,6 +27,12 @@ class OrderViewSet(viewsets.ModelViewSet):
             return CancelOrderSerializer
 
         return OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return redirect('http://localhost:3000/order/orders')
 
     def perform_create(self, serializer):
         confirmation = self.request.data.get('confirm_order', False)
@@ -58,7 +65,8 @@ class OrderViewSet(viewsets.ModelViewSet):
         order.total_amount = total_price
         order.save()
         order_serializer = OrderSerializer(order)
-        send_order_placed_email(user, order_serializer.data)
+        # send_order_placed_email(user, order_serializer.data)
+
 
     @action(detail=False, methods=['patch'], url_path='cancel-order')
     def cancel_order(self, request, *args, **kwargs):
