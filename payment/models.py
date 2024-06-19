@@ -22,7 +22,7 @@ class Payment(models.Model):
     amount = models.FloatField(default=0)
     payment_method = models.CharField(max_length=6, choices=payment_choices)
     status = models.CharField(max_length=7, choices=status_choices)
-    transaction_id = models.CharField(max_length= 20)
+    transaction_id = models.CharField(max_length= 50)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

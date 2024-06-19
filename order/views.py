@@ -32,7 +32,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return redirect('http://localhost:3000/order/orders')
+        return redirect('http://localhost:3000/payment/payments')
 
     def perform_create(self, serializer):
         confirmation = self.request.data.get('confirm_order', False)
@@ -65,7 +65,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         order.total_amount = total_price
         order.save()
         order_serializer = OrderSerializer(order)
-        # send_order_placed_email(user, order_serializer.data)
+        send_order_placed_email(user, order_serializer.data)
 
 
     @action(detail=False, methods=['patch'], url_path='cancel-order')

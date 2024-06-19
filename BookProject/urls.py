@@ -23,6 +23,7 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('cart/', include('cart.urls')),
     path('order/', include('order.urls')),
+    path('payment/', include('payment.urls')),
     path('api-auth/', include('rest_framework.urls')),
 
 ]

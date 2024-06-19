@@ -9,3 +9,4 @@ django-filter
 celery
 redis
 django-celery-beat
+django-admin-multi-select-filter

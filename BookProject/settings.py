@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+    'django_admin_multi_select_filter',
     'django_celery_beat',
     'rest_framework',
     'book',
